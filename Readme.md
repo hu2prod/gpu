@@ -1,6 +1,6 @@
 # gpu
 Right now it's wrapper over nooocl \
-I can change implementation in future \
+I can change implementation in future
 ## Motivation
  * I want to change queue types as easy as possible: variations: regular with benchmark of each call, regular with no benchmark, flush only once, out-of-order, out-of-order multichain
  * I want to change buffer implementation as easy as possible : host use ptr, regular, device only
