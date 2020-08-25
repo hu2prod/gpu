@@ -306,8 +306,7 @@ class @GPU_kernel
     for arg in arg_list
       # TODO GPU_image buffer + size_x + size_y
       if "number" == typeof arg
-        type = "uint"
-        type = "int" if arg < 0
+        type = "int"
         if Math.round(arg) != arg
           throw new Error "float is not supported #{arg}"
         if !isFinite arg
