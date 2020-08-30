@@ -305,13 +305,15 @@ class @GPU_kernel
     k_idx = 0
     for arg in arg_list
       # TODO GPU_image buffer + size_x + size_y
-      if "number" == typeof arg
+      if arg instanceof Number
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, +arg, "float"
+      else if "number" == typeof arg
         type = "int"
         if Math.round(arg) != arg
-          throw new Error "float is not supported #{arg}"
+          throw new Error "float is not supported #{arg}. Use new Number(...)"
         if !isFinite arg
-          throw new Error "float is not supported #{arg}"
-        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg, type
+          throw new Error "NaN float is not supported #{arg}. Use new Number(...)"
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg, "int"
       else if arg instanceof module.GPU_buffer
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
       else
