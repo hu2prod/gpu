@@ -350,9 +350,12 @@ class @GPU_kernel
         if !isFinite arg
           throw new Error "NaN float is not supported #{arg}. Use new Number(...)"
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg, "int"
-      # else if /^GPU_buffer/.test arg.constructor.name # NOTE slow check, due regexp
-      else if arg._device_buf? # NOTE fast, but inaccurate check
+      else if arg instanceof module.GPU_buffer
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
+      else if (arg instanceof module.GPU_buffer_image_rgb) or (arg instanceof module.GPU_buffer_image_rgba)
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_x, "int"
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_y, "int"
       else
         perr arg
         throw new Error "bad arg type"

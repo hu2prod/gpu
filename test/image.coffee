@@ -20,6 +20,8 @@ kernel_code_gen = (type)->
   code = """
     __kernel void _main(
       __global       u8*  img_dst,
+               const u32  _img_dst_size_x,
+               const u32  _img_dst_size_y,
       __global       u8*  img_src,
                const u32  img_size_x,
                const u32  img_size_y
@@ -47,7 +49,7 @@ describe "image section", ()->
         
         code = kernel_code_gen type
         await ctx.kernel_code code, default_warp_size, default_worker_count, defer(err, kernel); return on_end err if err
-        kernel.arg_list_set [buf_b, buf_a, size_x, size_y]
+        kernel.arg_list_set [buf_b, buf_a]
         
         await queue.h2d buf_a,      defer(err); return on_end err if err
         await queue.kernel kernel,  defer(err); return on_end err if err
@@ -69,7 +71,7 @@ describe "image section", ()->
         
         code = kernel_code_gen type
         await ctx.kernel_code code, default_warp_size, default_worker_count, defer(err, kernel); return on_end err if err
-        kernel.arg_list_set [buf_b, buf_a, size_x, size_y]
+        kernel.arg_list_set [buf_b, buf_a]
         
         await queue.h2d buf_a,      defer(err); return on_end err if err
         await queue.kernel kernel,  defer(err); return on_end err if err
@@ -91,7 +93,7 @@ describe "image section", ()->
         
         code = kernel_code_gen type
         await ctx.kernel_code code, default_warp_size, default_worker_count, defer(err, kernel); return on_end err if err
-        kernel.arg_list_set [buf_b, buf_a, size_x, size_y]
+        kernel.arg_list_set [buf_b, buf_a]
         
         await queue.h2d buf_a,      defer(err); return on_end err if err
         await queue.kernel kernel,  defer(err); return on_end err if err
@@ -115,7 +117,7 @@ describe "image section", ()->
             
             code = kernel_code_gen type
             await ctx.kernel_code code, default_warp_size, default_worker_count, defer(err, kernel); return on_end err if err
-            kernel.arg_list_set [buf_b, buf_a, size_x, size_y]
+            kernel.arg_list_set [buf_b, buf_a]
             
             await queue.h2d buf_a,      defer(err); return on_end err if err
             await queue.kernel kernel,  defer(err); return on_end err if err
@@ -139,7 +141,7 @@ describe "image section", ()->
             
             code = kernel_code_gen type
             await ctx.kernel_code code, default_warp_size, default_worker_count, defer(err, kernel); return on_end err if err
-            kernel.arg_list_set [buf_b, buf_a, size_x, size_y]
+            kernel.arg_list_set [buf_b, buf_a]
             
             await queue.h2d buf_a,      defer(err); return on_end err if err
             await queue.kernel kernel,  defer(err); return on_end err if err
