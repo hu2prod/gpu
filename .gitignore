@@ -2,3 +2,8 @@ node_modules
 coverage
 lib
 npm-debug.log
+
+tmp*.png
+tmp*.jpg
+tmp*.jpeg
+tmp*.raw

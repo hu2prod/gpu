@@ -3,6 +3,10 @@ require "fy"
 fs = require "fs"
 now = require "performance-now"
 gpu_wrapper = require "./nooocl_wrapper"
+obj_set @, require "./image_rgb.coffee"
+obj_set @, require "./image_rgba.coffee"
+# obj_set @, require "./image_list_rgb.coffee"
+# obj_set @, require "./image_list_rgba.coffee"
 # ###################################################################################################
 # ooo == out of order
 @device_list_get = ()->
@@ -26,6 +30,9 @@ class @GPU_device
 class @GPU_ctx
   parent_device : null
   _ctx : null
+  # ###################################################################################################
+  #    queue
+  # ###################################################################################################
   queue : ()->
     ret = new module.GPU_queue
     ret.parent_ctx = @
@@ -38,6 +45,9 @@ class @GPU_ctx
     ret._queue = gpu_wrapper.ctx_device_queue_out_of_order @_ctx, @parent_device._device
     ret
   
+  # ###################################################################################################
+  #    simple buffer
+  # ###################################################################################################
   buffer : (size)->
     ret = new module.GPU_buffer
     ret.parent_ctx = @
@@ -62,6 +72,32 @@ class @GPU_ctx
     }
     ret
   
+  # ###################################################################################################
+  #    image buffer
+  # ###################################################################################################
+  image_rgb : (max_size_x, max_size_y, can_resize = false)->
+    ret = new module.GPU_buffer_image_rgb max_size_x, max_size_y, can_resize
+    ret.parent_ctx = @
+    ret.init {
+      max_size_x
+      max_size_y
+      can_resize
+    }
+    ret
+  
+  image_rgba : (max_size_x, max_size_y, can_resize = false)->
+    ret = new module.GPU_buffer_image_rgba max_size_x, max_size_y, can_resize
+    ret.parent_ctx = @
+    ret.init {
+      max_size_x
+      max_size_y
+      can_resize
+    }
+    ret
+  
+  # ###################################################################################################
+  #    kernel
+  # ###################################################################################################
   kernel_code : (code, warp_size, worker_count, cb)->
     return cb new Error "!isFinite warp_size"     if !isFinite warp_size
     return cb new Error "!isFinite worker_count"  if !isFinite worker_count
@@ -314,7 +350,8 @@ class @GPU_kernel
         if !isFinite arg
           throw new Error "NaN float is not supported #{arg}. Use new Number(...)"
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg, "int"
-      else if arg instanceof module.GPU_buffer
+      # else if /^GPU_buffer/.test arg.constructor.name # NOTE slow check, due regexp
+      else if arg._device_buf? # NOTE fast, but inaccurate check
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
       else
         perr arg
