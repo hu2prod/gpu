@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "install": "iced -o lib -c src",
-    "test": "mocha --recursive --compilers coffee:iced-coffee-script/register --require iced-coffee-coverage/register-istanbul test && istanbul report"
+    "test": "mocha --recursive --compilers coffee:iced-coffee-script/register --require iced-coffee-coverage/register-istanbul test && istanbul report",
+    "test-specific": "mocha --timeout 5000 --recursive --compilers coffee:iced-coffee-script/register test -g"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
   "dependencies": {
     "fy": "github:hu2prod/fy",
     "iced-coffee-script": "^108.0.14",
+    "napi_jpeg": "github:hu2prod/napi_jpeg",
+    "napi_png": "github:hu2prod/napi_png",
     "nooocl": "github:vird/NOOOCL",
     "performance-now": "^2.1.0"
   }
