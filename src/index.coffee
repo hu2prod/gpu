@@ -3,10 +3,10 @@ require "fy"
 fs = require "fs"
 now = require "performance-now"
 gpu_wrapper = require "./nooocl_wrapper"
-obj_set @, require "./image_rgb.coffee"
-obj_set @, require "./image_rgba.coffee"
-# obj_set @, require "./image_list_rgb.coffee"
-# obj_set @, require "./image_list_rgba.coffee"
+obj_set @, require "./image_rgb"
+obj_set @, require "./image_rgba"
+# obj_set @, require "./image_list_rgb"
+# obj_set @, require "./image_list_rgba"
 # ###################################################################################################
 # ooo == out of order
 @device_list_get = ()->
