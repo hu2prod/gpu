@@ -162,6 +162,8 @@ class @GPU_ctx
       typedef        double8  f64x8;
       typedef        double16 f64x16;
       
+      #define and &&
+      #define or ||
       
       #{code}
       """
