@@ -99,6 +99,8 @@ class @GPU_buffer_image_list_rgb
   load2idx_buf_png : (buffer, idx, skip_exact_size_check = false)->
     [size_x, size_y] = napi_png.png_decode_size buffer
     @size_check size_x, size_y, skip_exact_size_check
+    @size_x = size_x
+    @size_y = size_y
     
     frame_size = 3*@size_x*@size_y
     dst = @host.slice(idx*frame_size, idx*frame_size + frame_size)
@@ -111,6 +113,8 @@ class @GPU_buffer_image_list_rgb
   load2idx_buf_jpeg : (buffer, idx, skip_exact_size_check = false)->
     [size_x, size_y] = napi_jpeg.jpeg_decode_size buffer
     @size_check size_x, size_y, skip_exact_size_check
+    @size_x = size_x
+    @size_y = size_y
     
     frame_size = 3*@size_x*@size_y
     dst = @host.slice(idx*frame_size, idx*frame_size + frame_size)
