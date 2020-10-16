@@ -38,7 +38,7 @@ kernel_code_gen = (type)->
 
 describe "image section", ()->
   for type in ["rgb", "rgba"]
-    do (type)->
+    describe "type #{type}", ()->
       it "workflow no load", (on_end)->
         dev = gpu_mod.device_list_get()[0]
         ctx = dev.ctx()

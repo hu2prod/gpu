@@ -79,6 +79,7 @@ class @GPU_buffer_image_rgba
         # convert
         buf = util.file_to_buf_reuse path, stat.size
         util.rgb2rgba buf, @host
+      @size = rgba_size
     else
       throw new Error "can't detect file format for '#{path}'"
     
@@ -113,6 +114,7 @@ class @GPU_buffer_image_rgba
     else
       # convert
       util.rgb2rgba buffer, @host
+    @size = rgba_size
     return
   
   load_buf_jpg : @prototype.load_buf_jpeg
@@ -133,10 +135,10 @@ class @GPU_buffer_image_rgba
   save : (path, quality)->
     if /\.png$/i.test path
       [offset, length, buffer] = @save_buf_png()
-      fs.writeFileSync path, buffer.slice offset, length
+      fs.writeFileSync path, buffer.slice offset, offset+length
     else if /\.jpe?g$/i.test path
       [offset, length, buffer] = @save_buf_jpeg null, quality
-      fs.writeFileSync path, buffer.slice offset, length
+      fs.writeFileSync path, buffer.slice offset, offset+length
     else if /\.raw$/i.test path
       fs.writeFileSync path, @host
     else

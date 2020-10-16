@@ -5,8 +5,8 @@ now = require "performance-now"
 gpu_wrapper = require "./nooocl_wrapper"
 obj_set @, require "./image_rgb"
 obj_set @, require "./image_rgba"
-# obj_set @, require "./image_list_rgb"
-# obj_set @, require "./image_list_rgba"
+obj_set @, require "./image_list_rgb"
+obj_set @, require "./image_list_rgba"
 # ###################################################################################################
 # ooo == out of order
 @device_list_get = ()->
@@ -76,7 +76,7 @@ class @GPU_ctx
   #    image buffer
   # ###################################################################################################
   image_rgb : (max_size_x, max_size_y, can_resize = false)->
-    ret = new module.GPU_buffer_image_rgb max_size_x, max_size_y, can_resize
+    ret = new module.GPU_buffer_image_rgb()
     ret.parent_ctx = @
     ret.init {
       max_size_x
@@ -86,11 +86,33 @@ class @GPU_ctx
     ret
   
   image_rgba : (max_size_x, max_size_y, can_resize = false)->
-    ret = new module.GPU_buffer_image_rgba max_size_x, max_size_y, can_resize
+    ret = new module.GPU_buffer_image_rgba()
     ret.parent_ctx = @
     ret.init {
       max_size_x
       max_size_y
+      can_resize
+    }
+    ret
+  
+  image_list_rgb : (max_size_x, max_size_y, max_count, can_resize = false)->
+    ret = new module.GPU_buffer_image_list_rgb()
+    ret.parent_ctx = @
+    ret.init {
+      max_size_x
+      max_size_y
+      max_count
+      can_resize
+    }
+    ret
+  
+  image_list_rgba : (max_size_x, max_size_y, max_count, can_resize = false)->
+    ret = new module.GPU_buffer_image_list_rgba()
+    ret.parent_ctx = @
+    ret.init {
+      max_size_x
+      max_size_y
+      max_count
       can_resize
     }
     ret
@@ -358,6 +380,11 @@ class @GPU_kernel
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_x, "int"
         gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_y, "int"
+      else if (arg instanceof module.GPU_buffer_image_list_rgb) or (arg instanceof module.GPU_buffer_image_list_rgba)
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg._device_buf
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_x, "int"
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.size_y, "int"
+        gpu_wrapper.kernel_set_arg @_kernel, k_idx++, arg.count,  "int"
       else
         perr arg
         throw new Error "bad arg type"
