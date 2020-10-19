@@ -169,7 +169,7 @@ class @GPU_buffer_image_list_rgb
   
   load_folder : (folder, skip_exact_size_check = false)->
     file_list = fs.readdirSync folder
-    file_list.sort (a,b)->a.localeCompare b
+    file_list.sort (a,b)->a.localeCompare b, undefined, {numeric: true, sensitivity: 'base'}
     for v,idx in file_list
       file_list[idx] = "#{folder}/#{v}"
     @load_list file_list, skip_exact_size_check
