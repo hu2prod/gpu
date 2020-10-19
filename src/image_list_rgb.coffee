@@ -30,8 +30,12 @@ class @GPU_buffer_image_list_rgb
   size_x      : 0
   size_y      : 0
   count       : 0
+  file_list   : []
   
   can_resize  : false
+  
+  constructor : ()->
+    @file_list = []
   
   init: (opt = {})->
     {
@@ -165,6 +169,7 @@ class @GPU_buffer_image_list_rgb
     for file, idx in file_list
       @load2idx file, idx, skip_exact_size_check
       skip_exact_size_check = false
+    @file_list = file_list
     return
   
   load_folder : (folder, skip_exact_size_check = false)->
